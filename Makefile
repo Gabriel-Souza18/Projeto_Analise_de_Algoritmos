@@ -1,7 +1,11 @@
 objetos = io.o teste.c
 
-prog1: $(objetos)
+run: teste
+	./teste
+
+teste: $(objetos)
 	gcc $(objetos) -o teste
+
 
 io.o: io.h io.c
 	gcc -c io.c

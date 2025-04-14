@@ -2,12 +2,13 @@
 #include <stdlib.h>
 #include <stdio.h>
 
+
 int main(){
     // Teste de leitura
     char *entrada = lerEntrada("entrada.txt");
     if (entrada != NULL) {
         printf("Conteudo do arquivo de entrada:\n%s\n", entrada);
-        free(entrada);
+
     } else {
         printf("Erro ao ler o arquivo de entrada.\n");
     }
