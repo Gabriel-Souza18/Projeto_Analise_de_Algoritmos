@@ -3,41 +3,41 @@
 #include <stdio.h>
 
 
-Tabuleiro* inicializaTabuleiro(char* entrada){
-    Tabuleiro* tabuleiro = (Tabuleiro*)malloc(sizeof(Tabuleiro));
-    if (tabuleiro == NULL) {
-        printf("Erro ao alocar memória para o tabuleiro");
-        return NULL;
+Tabuleiro* inicializaTabuleiro(char **entrada) {
+    Tabuleiro* tab = malloc(sizeof(Tabuleiro));
+    if (!tab) return NULL;
+
+    sscanf(*entrada, "%d %d", &tab->N, &tab->M);
+    while (**entrada != '\n') (*entrada)++;
+    (*entrada)++;
+
+    int total = (tab->N * tab->M) / 2;
+    tab->estado = malloc(sizeof(int) * total);
+    for (int i = 0; i < total; i++) {
+        sscanf(*entrada, "%d", &tab->estado[i]);
+        while (**entrada != ' ' && **entrada != '\0' && **entrada != '\n') (*entrada)++;
+        if (**entrada == ' ') (*entrada)++;
     }
 
-    // Inicializa o tabuleiro com os valores de entrada
-    sscanf(entrada, "%d %d", &(tabuleiro->N), &(tabuleiro->M));
-    tabuleiro->estado = (int*)malloc(tabuleiro->N * tabuleiro->M * sizeof(int));
-    if (tabuleiro->estado == NULL) {
-        printf("Erro ao alocar memória para o estado do tabuleiro");
-        free(tabuleiro);
-        return NULL;
-    }
-
-    for (int i = 0; i < tabuleiro->N; i++) {
-        for (int j = 0; j < tabuleiro->M; j++) {
-            sscanf(entrada, "%d", &(tabuleiro->estado[i * tabuleiro->M + j]));
-            entrada += 2; // Pular o número e o espaço
-        }
-    }
-
-    return tabuleiro;
+    return tab;
 }
-void liberaTabuleiro(Tabuleiro *tabuleiro){
-    if (tabuleiro != NULL) {
+
+void liberaTabuleiro(Tabuleiro *tabuleiro) {
+    if (tabuleiro) {
         free(tabuleiro->estado);
         free(tabuleiro);
     }
 }
-void imprimeTabuleiro(Tabuleiro *tabuleiro){
-    for (int i = 0; i < tabuleiro->N; i++) {
-        for (int j = 0; j < tabuleiro->M; j++) {
-            printf("%d ", tabuleiro->estado[i * tabuleiro->M + j]);
+
+void imprimeTabuleiro(Tabuleiro *tab) {
+    int k = 0;
+    for (int i = 0; i < tab->N; i++) {
+        for (int j = 0; j < tab->M; j++) {
+            if ((i + j) % 2 == 1) {
+                printf(". ");
+            } else {
+                printf("%d ", tab->estado[k++]);
+            }
         }
         printf("\n");
     }

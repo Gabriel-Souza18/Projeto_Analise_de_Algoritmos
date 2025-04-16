@@ -3,21 +3,26 @@
 #include <stdio.h>
 
 
-int main(){
-    // Teste de leitura
+int main() {
     char *entrada = lerEntrada("entrada.txt");
-    if (entrada != NULL) {
-        printf("Conteudo do arquivo de entrada:\n%s\n", entrada);
+    if (!entrada) return 1;
 
-    } else {
-        printf("Erro ao ler o arquivo de entrada.\n");
+    char *ptr = entrada;
+    char saida[1024] = "";
+
+    while (1) {
+        int N, M;
+        sscanf(ptr, "%d %d", &N, &M);
+        if (N == 0 && M == 0) break;
+
+        Tabuleiro *tab = inicializaTabuleiro(&ptr);
+        imprimeTabuleiro(tab);
+
+        strcat(saida, "0\n"); // valor fictício por enquanto
+        liberaTabuleiro(tab);
     }
-    
-    // Teste de escrita
-    char* saida= "1\n2\n7";
-    escreverSaida("saida.txt", saida);
-    printf("Arquivo de saída escrito com sucesso.\n");
-    free(entrada);
 
-return 0;
+    escreverSaida("saida.txt", saida);
+    free(entrada);
+    return 0;
 }
