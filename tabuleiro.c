@@ -37,5 +37,6 @@ void imprimeTabuleiro(Tabuleiro *tabuleiro) {
         printf("%d ", tabuleiro->estado[i]);
     }
     printf("\n");
+    
 }
 

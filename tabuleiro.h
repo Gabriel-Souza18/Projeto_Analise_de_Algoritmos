@@ -1,3 +1,6 @@
+#ifndef TABULEIRO_H
+#define TABULEIRO_H
+
 typedef struct  tabuleiro {
     int N;
     int M;
@@ -7,3 +10,4 @@ typedef struct  tabuleiro {
 Tabuleiro* inicializaTabuleiro(char** entrada);
 void imprimeTabuleiro(Tabuleiro *tab);
 void liberaTabuleiro(Tabuleiro *tab);
+#endif 
