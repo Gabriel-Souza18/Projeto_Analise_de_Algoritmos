@@ -1,6 +1,10 @@
+#include "tabuleiro.h"
 #include "io.h"
+
+
 #include <stdlib.h>
 #include <stdio.h>
+#include <string.h>
 
 
 int main() {
@@ -9,6 +13,9 @@ int main() {
 
     char *ptr = entrada;
     char saida[1024] = "";
+
+    Tabuleiro **Tabuleiros = NULL;
+    int numTabuleiros = 0;
 
     while (1) {
         int N, M;

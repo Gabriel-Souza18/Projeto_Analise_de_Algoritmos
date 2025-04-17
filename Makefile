@@ -1,4 +1,4 @@
-objetos = io.o teste.c
+objetos = io.o tabuleiro.o teste.c 
 
 run: teste
 	./teste
@@ -6,6 +6,8 @@ run: teste
 teste: $(objetos)
 	gcc $(objetos) -o teste
 
+tabuleiro.o: tabuleiro.h tabuleiro.c
+	gcc -c tabuleiro.c
 
 io.o: io.h io.c
 	gcc -c io.c

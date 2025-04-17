@@ -4,22 +4,23 @@
 
 
 Tabuleiro* inicializaTabuleiro(char **entrada) {
-    Tabuleiro* tab = malloc(sizeof(Tabuleiro));
-    if (!tab) return NULL;
+    Tabuleiro* tabuleiro = malloc(sizeof(Tabuleiro));
+    if (!tabuleiro) return NULL;
 
-    sscanf(*entrada, "%d %d", &tab->N, &tab->M);
+    sscanf(*entrada, "%d %d", &tabuleiro->N, &tabuleiro->M);
     while (**entrada != '\n') (*entrada)++;
     (*entrada)++;
 
-    int total = (tab->N * tab->M) / 2;
-    tab->estado = malloc(sizeof(int) * total);
+    int total = (tabuleiro->N * tabuleiro->M +1) / 2;
+    tabuleiro->estado = malloc(sizeof(int) * total);
     for (int i = 0; i < total; i++) {
-        sscanf(*entrada, "%d", &tab->estado[i]);
+        sscanf(*entrada, "%d", &tabuleiro->estado[i]);
         while (**entrada != ' ' && **entrada != '\0' && **entrada != '\n') (*entrada)++;
         if (**entrada == ' ') (*entrada)++;
     }
-
-    return tab;
+    while (**entrada != '\n' && **entrada != '\0') (*entrada)++;
+      if(**entrada == '\n') (*entrada)++;
+    return tabuleiro;
 }
 
 void liberaTabuleiro(Tabuleiro *tabuleiro) {
@@ -29,16 +30,12 @@ void liberaTabuleiro(Tabuleiro *tabuleiro) {
     }
 }
 
-void imprimeTabuleiro(Tabuleiro *tab) {
-    int k = 0;
-    for (int i = 0; i < tab->N; i++) {
-        for (int j = 0; j < tab->M; j++) {
-            if ((i + j) % 2 == 1) {
-                printf(". ");
-            } else {
-                printf("%d ", tab->estado[k++]);
-            }
-        }
-        printf("\n");
+void imprimeTabuleiro(Tabuleiro *tabuleiro) {
+    printf("tabuleiro %dx%d:\n", tabuleiro->N, tabuleiro->M);
+    int tamanho = (tabuleiro->N * tabuleiro->M + 1) / 2;
+    for (int i = 0; i < tamanho; i++) {
+        printf("%d ", tabuleiro->estado[i]);
     }
+    printf("\n");
 }
+

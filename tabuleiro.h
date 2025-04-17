@@ -4,6 +4,6 @@ typedef struct  tabuleiro {
     int * estado; // Tabuleiro 8x8
 } Tabuleiro;
 
-Tabuleiro* inicializaTabuleiro(char* entrada);
-void liberaTabuleiro(Tabuleiro *tabuleiro);
-void imprimeTabuleiro(Tabuleiro *tabuleiro);
+Tabuleiro* inicializaTabuleiro(char** entrada);
+void imprimeTabuleiro(Tabuleiro *tab);
+void liberaTabuleiro(Tabuleiro *tab);
