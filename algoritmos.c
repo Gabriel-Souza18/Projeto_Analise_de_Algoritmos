@@ -75,7 +75,7 @@ char* forcaBruta(Tabuleiro* tabuleiro) {
     return res;
 }
 
-// MÍNIMOS MOVIMENTOS - com pilha iterativa
+// MÍNIMOS MOVIMENTOS - com pilha dinâmica e otimizado
 char* minMovimentos(Tabuleiro* tabuleiro) {
     int maxCaptura = 0;
 
@@ -91,17 +91,23 @@ char* minMovimentos(Tabuleiro* tabuleiro) {
         for (int j = 0; j < tabuleiro->M; j++) {
             if (getCasa(tabuleiro, i, j) != 1) continue;
 
-            Estado pilha[500];
+            Estado* pilha = malloc(sizeof(Estado) * 100);
+            int capacidade = 100;
             int topo = 0;
 
             int* estadoInicial = malloc(sizeof(int) * tamanho);
             memcpy(estadoInicial, tabuleiro->estado, sizeof(int) * tamanho);
-
             pilha[topo++] = (Estado){i, j, 0, estadoInicial};
 
             while (topo > 0) {
                 Estado atual = pilha[--topo];
                 int capturou = 0;
+
+                // Restaura o estado do tabuleiro
+                Tabuleiro copia;
+                copia.N = tabuleiro->N;
+                copia.M = tabuleiro->M;
+                copia.estado = atual.estadoCopia;
 
                 for (int d = 0; d < 4; d++) {
                     int mi = atual.i + direcoes[d][0];
@@ -109,25 +115,27 @@ char* minMovimentos(Tabuleiro* tabuleiro) {
                     int ni = atual.i + 2 * direcoes[d][0];
                     int nj = atual.j + 2 * direcoes[d][1];
 
-                    Tabuleiro copia;
-                    copia.N = tabuleiro->N;
-                    copia.M = tabuleiro->M;
-                    copia.estado = malloc(sizeof(int) * tamanho);
-                    memcpy(copia.estado, atual.estadoCopia, sizeof(int) * tamanho);
-
                     if (getCasa(&copia, mi, mj) == 2 && getCasa(&copia, ni, nj) == 0) {
-                        setCasa(&copia, atual.i, atual.j, 0);
-                        setCasa(&copia, mi, mj, 0);
-                        setCasa(&copia, ni, nj, 1);
+                        // Cria novo estado modificado
+                        int* novoEstado = malloc(sizeof(int) * tamanho);
+                        memcpy(novoEstado, copia.estado, sizeof(int) * tamanho);
+                        Tabuleiro novo;
+                        novo.N = tabuleiro->N;
+                        novo.M = tabuleiro->M;
+                        novo.estado = novoEstado;
 
-                        int* novaCopia = malloc(sizeof(int) * tamanho);
-                        memcpy(novaCopia, copia.estado, sizeof(int) * tamanho);
+                        setCasa(&novo, atual.i, atual.j, 0);
+                        setCasa(&novo, mi, mj, 0);
+                        setCasa(&novo, ni, nj, 1);
 
-                        pilha[topo++] = (Estado){ni, nj, atual.capturas + 1, novaCopia};
+                        // Redimensiona pilha se necessário
+                        if (topo >= capacidade) {
+                            capacidade *= 2;
+                            pilha = realloc(pilha, sizeof(Estado) * capacidade);
+                        }
+                        pilha[topo++] = (Estado){ni, nj, atual.capturas + 1, novoEstado};
                         capturou = 1;
                     }
-
-                    free(copia.estado);
                 }
 
                 if (!capturou && atual.capturas > maxCaptura) {
@@ -136,6 +144,8 @@ char* minMovimentos(Tabuleiro* tabuleiro) {
 
                 free(atual.estadoCopia);
             }
+
+            free(pilha);
         }
     }
 
