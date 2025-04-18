@@ -1,7 +1,7 @@
 objetos = io.o tabuleiro.o algoritmos.o teste.c 
 
 run: teste
-	./teste
+	./teste -i entrada.txt 
 
 teste: $(objetos)
 	gcc $(objetos) -o teste
