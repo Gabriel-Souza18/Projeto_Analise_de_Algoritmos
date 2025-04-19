@@ -1,10 +1,10 @@
-objetos = io.o tabuleiro.o algoritmos.o teste.c 
+objetos = io.o tabuleiro.o algoritmos.o main.c 
 
-run: teste
-	./teste -i entrada.txt 
+run: main
+	./main -i entrada.txt 
 
-teste: $(objetos)
-	gcc $(objetos) -o teste
+main: $(objetos)
+	gcc $(objetos) -o main
 
 algoritmos.o: algoritmos.h algoritmos.c
 	gcc -c algoritmos.c
@@ -16,4 +16,4 @@ io.o: io.h io.c
 	gcc -c io.c
 
 clean:
-	rm -rf  saida.txt io.o tabuleiro.o  algoritmos.o teste 
+	rm -rf  saida.txt io.o tabuleiro.o  algoritmos.o main 
