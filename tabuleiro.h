@@ -2,8 +2,7 @@
 #define TABULEIRO_H
 
 typedef struct  tabuleiro {
-    int N;
-    int M;
+    int N, M;
     int * estado; // Tabuleiro 8x8
 } Tabuleiro;
 

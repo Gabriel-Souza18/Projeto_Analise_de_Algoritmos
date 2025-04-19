@@ -39,4 +39,3 @@ void imprimeTabuleiro(Tabuleiro *tabuleiro) {
     printf("\n");
     
 }
-

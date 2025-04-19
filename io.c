@@ -3,7 +3,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-
 char* lerEntrada(char *nomeEntrada) {
     char *conteudo = NULL;
     int tamanho = 0;
@@ -18,15 +17,10 @@ char* lerEntrada(char *nomeEntrada) {
         char linha[256];
         if (!fgets(linha, sizeof(linha), arquivo)) break;
         if (strcmp(linha, "0 0\n") == 0) break;
+        if (strlen(linha) == 0 || linha[0] == '\n') continue;
 
         int len = strlen(linha);
         conteudo = realloc(conteudo, tamanho + len + 1);
-        if (conteudo == NULL) {
-            perror("Erro ao alocar memória");
-            fclose(arquivo);
-            return NULL;
-        }
-
         strcpy(conteudo + tamanho, linha);
         tamanho += len;
     }
@@ -37,10 +31,6 @@ char* lerEntrada(char *nomeEntrada) {
 
 void escreverSaida(char *nomeSaida, char *conteudo) {
     FILE *arquivo = fopen(nomeSaida, "w");
-    if (arquivo == NULL) {
-        perror("Erro ao abrir o arquivo de saída");
-        return;
-    }
     fprintf(arquivo, "%s", conteudo);
     fclose(arquivo);
 }
