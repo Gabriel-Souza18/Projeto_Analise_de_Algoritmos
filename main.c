@@ -9,7 +9,7 @@
 
 int main(int argc, char *argv[]) {
     if (argc != 3 || strcmp(argv[1], "-i") != 0) {
-        printf("Uso: %s -i entrada.txt\n", argv[0]);
+        printf("Arrumar no makefile: %s -i entrada.txt\n", argv[0]);
         return 1;
     }
 

@@ -29,13 +29,30 @@ void liberaTabuleiro(Tabuleiro *tabuleiro) {
         free(tabuleiro);
     }
 }
-
 void imprimeTabuleiro(Tabuleiro *tabuleiro) {
-    printf("tabuleiro %dx%d:\n", tabuleiro->N, tabuleiro->M);
-    int tamanho = (tabuleiro->N * tabuleiro->M + 1) / 2;
-    for (int i = 0; i < tamanho; i++) {
-        printf("%d ", tabuleiro->estado[i]);
+    if (tabuleiro == NULL || tabuleiro->estado == NULL) {
+        printf("Tabuleiro inválido!\n");
+        return;
     }
-    printf("\n");
+
+    int total_casas = (tabuleiro->N * tabuleiro->M) / 2;
+    int idx = 0; // índice para percorrer o array estado
+
+    printf("\nTabuleiro %dx%d (casas jogáveis marcadas com [N]):\n", tabuleiro->N, tabuleiro->M);
     
+    for (int i = 1; i <= tabuleiro->N; i++) {
+        for (int j = 1; j <= tabuleiro->M; j++) {
+            // Verifica se é uma casa jogável (escura)
+            if ((i + j) % 2 == 0) {
+                // Imprime o valor da casa jogável com formatação
+                printf("[%d]", tabuleiro->estado[idx]);
+                idx++;
+            } else {
+                // Casa não jogável (clara)
+                printf(" . ");
+            }
+        }
+        printf("\n");
+    }
 }
+    

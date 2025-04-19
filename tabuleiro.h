@@ -3,7 +3,7 @@
 
 typedef struct  tabuleiro {
     int N, M;
-    int * estado; // Tabuleiro 8x8
+    int * estado;
 } Tabuleiro;
 
 Tabuleiro* inicializaTabuleiro(char** entrada);
