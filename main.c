@@ -12,7 +12,7 @@ int main(int argc, char *argv[]) {
         printf("Arrumar no makefile: %s -i entrada.txt\n", argv[0]);
         return 1;
     }
-
+    // Carrega todo o conteúdo de entrada.txt em memória
     char *entrada = lerEntrada(argv[2]);
     if (!entrada) return 1;
 
@@ -23,12 +23,15 @@ int main(int argc, char *argv[]) {
     char *ptr = entrada;
     char saida[4096] = "";
 
+    // Processa cada par N M até encontrar "0 0"
     while (1) {
         int N, M;
         sscanf(ptr, "%d %d", &N, &M);
         if (N == 0 && M == 0) break;
 
+        // Constrói o tabuleiro e executa o algoritmo desejado
         Tabuleiro *tab = inicializaTabuleiro(&ptr);
+        imprimeTabuleiro(tab);
         char *resultado = forcaBruta(tab); // Ou minMovimentos(tab)
         strcat(saida, resultado);
         free(resultado);
@@ -38,6 +41,7 @@ int main(int argc, char *argv[]) {
     gettimeofday(&fim, NULL);
     getrusage(RUSAGE_SELF, &uso);
 
+    // Grava resultados em arquivo e imprime tempos no console
     escreverSaida("saida.txt", saida);
 
     printf("Tempo usuário: %ld us\n", uso.ru_utime.tv_sec * 1000000 + uso.ru_utime.tv_usec);

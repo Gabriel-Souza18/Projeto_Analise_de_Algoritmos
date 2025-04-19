@@ -39,7 +39,7 @@ void imprimeTabuleiro(Tabuleiro *tabuleiro) {
     int idx = 0; // índice para percorrer o array estado
 
     printf("\nTabuleiro %dx%d (casas jogáveis marcadas com [N]):\n", tabuleiro->N, tabuleiro->M);
-    
+    printf(" total de casas %d\n", total_casas+1);
     for (int i = 1; i <= tabuleiro->N; i++) {
         for (int j = 1; j <= tabuleiro->M; j++) {
             // Verifica se é uma casa jogável (escura)
