@@ -7,6 +7,5 @@ typedef struct  tabuleiro {
 } Tabuleiro;
 
 Tabuleiro* inicializaTabuleiro(char** entrada);
-void imprimeTabuleiro(Tabuleiro *tab);
 void liberaTabuleiro(Tabuleiro *tab);
 #endif 

@@ -1,6 +1,6 @@
 # Projeto_Analise_de_Algoritmos
 
-Repositório de exemplo para a disciplina de Projeto e Análise de Algoritmos (2025/1 – Prof. Leonardo Rocha). Este programa lê uma série de tabuleiros de um jogo de “captura” (semelhante a damas), executa algorítmos de força‑bruta e de mínimo de movimentos, mede tempos de usuário e sistema, e grava os resultados em um arquivo de saída.
+Repositório para a disciplina de Projeto e Análise de Algoritmos (2025/1 – Prof. Leonardo Rocha). Este programa lê uma série de tabuleiros de um jogo de “captura” (semelhante a damas), executa algorítmos de força‑bruta e de mínimo de movimentos, mede tempos de usuário e sistema, e grava os resultados em um arquivo de saída.
 
 ## Estrutura do Projeto
 
@@ -18,8 +18,7 @@ Repositório de exemplo para a disciplina de Projeto e Análise de Algoritmos (2
 
 - **tabuleiro.c / tabuleiro.h**  
   Estrutura `Tabuleiro` e rotinas de:
-  - `inicializaTabuleiro` — converte a string lida num struct  
-  - `imprimeTabuleiro` — (opcional) exibe o estado no console  
+  - `inicializaTabuleiro` — converte a string lida num struct   
   - `liberaTabuleiro` — desaloca memória
 
 - **algoritmos.c / algoritmos.h**  

@@ -31,8 +31,7 @@ int main(int argc, char *argv[]) {
 
         // Constrói o tabuleiro e executa o algoritmo desejado
         Tabuleiro *tab = inicializaTabuleiro(&ptr);
-        imprimeTabuleiro(tab);
-        char *resultado = forcaBruta(tab); // Ou minMovimentos(tab)
+        char *resultado = minMovimentos(tab); // Ou minMovimentos(tab)
         strcat(saida, resultado);
         free(resultado);
         liberaTabuleiro(tab);
