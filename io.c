@@ -1,36 +1,54 @@
 #include "io.h"
-#include <string.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
+// lê o conteúdo de um arquivo de entrada e retorna como uma string
+// a leitura é interrompida quando encontra a linha "0 0\n" ou quando não há mais dados
 char* lerEntrada(char *nomeEntrada) {
-    char *conteudo = NULL;
-    int tamanho = 0;
-
     FILE *arquivo = fopen(nomeEntrada, "r");
-    if (arquivo == NULL) {
+    if (!arquivo) {
         perror("Erro ao abrir o arquivo de entrada");
         return NULL;
     }
 
-    while (1) {
-        char linha[256];
-        if (!fgets(linha, sizeof(linha), arquivo)) break;
-        if (strcmp(linha, "0 0\n") == 0) break;
-        if (strlen(linha) == 0 || linha[0] == '\n') continue;
+    char *conteudo = NULL;
+    size_t tamanhoTotal = 0;
+    char buffer[256];
 
-        int len = strlen(linha);
-        conteudo = realloc(conteudo, tamanho + len + 1);
-        strcpy(conteudo + tamanho, linha);
-        tamanho += len;
+    while (fgets(buffer, sizeof(buffer), arquivo) != NULL) {
+        // se encontrar a linha de término, sai do loop.
+        if (strcmp(buffer, "0 0\n") == 0)
+            break;
+
+        // pula linhas vazias
+        if (buffer[0] == '\n' || buffer[0] == '\0')
+            continue;
+
+        size_t len = strlen(buffer);
+        char *temp = realloc(conteudo, tamanhoTotal + len + 1);
+        if (!temp) {
+            free(conteudo);
+            fclose(arquivo);
+            perror("Erro ao realocar memória");
+            return NULL;
+        }
+        conteudo = temp;
+        strcpy(conteudo + tamanhoTotal, buffer);
+        tamanhoTotal += len;
     }
 
     fclose(arquivo);
     return conteudo;
 }
 
+// escreve o conteúdo fornecido em um arquivo de saída
 void escreverSaida(char *nomeSaida, char *conteudo) {
     FILE *arquivo = fopen(nomeSaida, "w");
+    if (!arquivo) {
+        perror("Erro ao abrir o arquivo de saída");
+        return;
+    }
     fprintf(arquivo, "%s", conteudo);
     fclose(arquivo);
 }

@@ -1,51 +1,59 @@
 #include "tabuleiro.h"
 #include "io.h"
 #include "algoritmos.h"
-#include <stdlib.h>
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
-#include <sys/time.h>
-#include <sys/resource.h>
+#include <time.h>
 
-int main(int argc, char *argv[]) {
-    if (argc != 3 || strcmp(argv[1], "-i") != 0) {
-        printf("Arrumar no makefile: %s -i entrada.txt\n", argv[0]);
+int main(int argc, char **argv) {
+    if (argc < 3 || argv[1][0] != '-' || argv[1][1] != 'i') {
+        printf("Uso: %s -i arquivo_entrada.txt\n", argv[0]);
         return 1;
     }
-    // Carrega todo o conteúdo de entrada.txt em memória
+
+    // lê o conteúdo do arquivo de entrada
     char *entrada = lerEntrada(argv[2]);
-    if (!entrada) return 1;
+    if (!entrada)
+        return 1;
 
-    struct timeval inicio, fim;
-    struct rusage uso;
-    gettimeofday(&inicio, NULL);
-
+    // ponteiro para percorrer a entrada
     char *ptr = entrada;
+    // buffer para armazenar a saída final
     char saida[4096] = "";
 
-    // Processa cada par N M até encontrar "0 0"
+    // registra o tempo de início da execução
+    clock_t inicio = clock();
+
+    // processa os casos até encontrar "0 0"
     while (1) {
         int N, M;
-        sscanf(ptr, "%d %d", &N, &M);
-        if (N == 0 && M == 0) break;
+        if (sscanf(ptr, "%d %d", &N, &M) != 2 || (N == 0 && M == 0))
+            break;
 
-        // Constrói o tabuleiro e executa o algoritmo desejado
+        // avança o ponteiro para o início da linha seguinte
+        while (*ptr != '\n' && *ptr)
+            ptr++;
+        if (*ptr == '\n')
+            ptr++;
+
+        // inicializa o tabuleiro a partir dos dados da entrada
+        // a função 'inicializaTabuleiro' processa o ponteiro e avança conforme necessário
         Tabuleiro *tab = inicializaTabuleiro(&ptr);
-        char *resultado = minMovimentos(tab); // Ou minMovimentos(tab)
-        strcat(saida, resultado);
-        free(resultado);
+
+        // calcula o resultado utilizando a busca de movimentos mínimos
+        char *res = buscaMovimentosMinimos(tab);
+
+        strcat(saida, res);
+        free(res);
         liberaTabuleiro(tab);
     }
 
-    gettimeofday(&fim, NULL);
-    getrusage(RUSAGE_SELF, &uso);
-
-    // Grava resultados em arquivo e imprime tempos no console
+    // registra o tempo final e calcula o tempo total de execução
+    clock_t fim = clock();
     escreverSaida("saida.txt", saida);
 
-    printf("Tempo usuário: %ld us\n", uso.ru_utime.tv_sec * 1000000 + uso.ru_utime.tv_usec);
-    printf("Tempo sistema: %ld us\n", uso.ru_stime.tv_sec * 1000000 + uso.ru_stime.tv_usec);
-
+    printf("Tempo total: %.2f ms\n", (double)(fim - inicio) * 1000 / CLOCKS_PER_SEC);
     free(entrada);
     return 0;
 }
