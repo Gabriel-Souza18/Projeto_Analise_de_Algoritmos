@@ -3,7 +3,7 @@
 #include <stdio.h>
 #include <string.h>
 
-int maior(int a, int b){
+int max(int a, int b){
     int resultado;
     if (a > b){
         resultado = a;
@@ -91,12 +91,11 @@ int calcularMaxCapturas(Tabuleiro *tab, int linha, int coluna){
         int destLinha = linha + 2 * movimentos[d][0];
         int destColuna = coluna + 2 * movimentos[d][1];
         if (lerCasa(tab, midLinha, midColuna) == 2 && lerCasa(tab, destLinha, destColuna) == 0){
-            // realiza a captura
             gravarCasa(tab, linha, coluna, 0);
             gravarCasa(tab, midLinha, midColuna, 0);
             gravarCasa(tab, destLinha, destColuna, 1);
             int capturas = 1 + calcularMaxCapturas(tab, destLinha, destColuna);
-            melhorResultado = maior(melhorResultado, capturas);
+            melhorResultado = max(melhorResultado, capturas);
             // restaura o estado original 
             gravarCasa(tab, linha, coluna, 1);
             gravarCasa(tab, midLinha, midColuna, 2);
@@ -113,7 +112,7 @@ char* buscaForcaBruta(Tabuleiro* tabuleiro){
         for(int j = 0; j < tabuleiro->M; j++){
             if (lerCasa(tabuleiro, i, j) == 1){
                 int capturas = calcularMaxCapturas(tabuleiro, i, j);
-                capturasMaximas = maior(capturasMaximas, capturas);
+                capturasMaximas = max(capturasMaximas, capturas);
             }
         }
     }
@@ -144,7 +143,7 @@ char* buscaMovimentosMinimos(Tabuleiro* tabuleiro){
             pilha[topo++] = (Estado){ i, j, 0, estadoInicial };
             while (topo > 0){
                 Estado atual = pilha[--topo];
-                capturasMaxEncontradas = maior(capturasMaxEncontradas, atual.capturas);
+                capturasMaxEncontradas = max(capturasMaxEncontradas, atual.capturas);
                 for(int d = 0; d < 4; d++){
                     int saltoLinha = atual.linha + movimentos[d][0];
                     int saltoColuna = atual.coluna + movimentos[d][1];

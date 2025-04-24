@@ -2,10 +2,11 @@
 #define ALGORITMOS_H
 #include "tabuleiro.h"
 
- // explora recursivamente todas as possibilidades de movimentp 
- // para conseguir capturar a maior quantidade de peças possíveis
+// Explora recursivamente todas as possibilidades de movimento 
 char* buscaForcaBruta(Tabuleiro* tabuleiro);
- // utiliza pilha para explorar as possibilidades de movimento
+
+// Usa pilha - melhor para casos com menos peças
+// Testa se a ordem dos movimentos afeta o resultado
 char* buscaMovimentosMinimos(Tabuleiro* tabuleiro);
 
 #endif
