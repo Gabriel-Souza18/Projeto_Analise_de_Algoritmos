@@ -13,7 +13,7 @@ char* lerEntrada(char *nomeEntrada){
     }
     char *conteudo = NULL;
     size_t tamanhoTotal = 0;
-    char buffer[256];
+    char buffer[1024];
     while(fgets(buffer, sizeof(buffer), arquivo) != NULL){
         if (strcmp(buffer, "0 0\n") == 0){
             break;
