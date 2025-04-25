@@ -4,9 +4,9 @@
 // estrutura que representa o tabuleiro 
 // armazena as dimensões e o vetor de estado das casas válidas
 typedef struct tabuleiro{
-    int N;      // número de linhas do tabuleiro
-    int M;      // número de colunas do tabuleiro
-    int *estado; // vetor que guarda o estado das casas válidas
+    int N;      // número de linhas 
+    int M;      // número de colunas
+    int *estado; // vetor que guarda as casas válidas
 }Tabuleiro;
 
 // inicializa um tabuleiro utilizando os dados presentes na entrada
