@@ -1,6 +1,7 @@
 #include "tabuleiro.h"
 #include <stdlib.h>
 #include <stdio.h>
+#include <string.h>
 
 // inicializa um novo tabuleiro utilizando os dados na string de entrada
 // o parâmetro 'entrada' é um ponteiro para ponteiro, permitindo avançar a posição atual da leitura

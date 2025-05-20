@@ -83,6 +83,5 @@ int main(int argc, char **argv){
     escreverSaida("saida.txt", buffer_saida);
 
     free(entrada_completa); // Libera a memória alocada por lerEntrada
-    printf("Processamento concluído. Resultados em saida.txt\n");
     return 0;
 }

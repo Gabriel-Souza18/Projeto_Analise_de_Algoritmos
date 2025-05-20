@@ -1,10 +1,10 @@
 objetos = io.o tabuleiro.o algoritmos.o main.c 
 
 run: main
-	./main -i entrada.txt 
+	./tp1 -i entrada.txt 
 
 main: $(objetos)
-	gcc $(objetos) -o main
+	gcc $(objetos) -o tp1
 
 algoritmos.o: algoritmos.h algoritmos.c
 	gcc -c algoritmos.c
@@ -16,4 +16,4 @@ io.o: io.h io.c
 	gcc -c io.c
 
 clean:
-	rm -rf  saida.txt io.o tabuleiro.o  algoritmos.o main 
+	rm -rf  io.o tabuleiro.o  algoritmos.o tp1

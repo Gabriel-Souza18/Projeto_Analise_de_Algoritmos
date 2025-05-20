@@ -1,6 +1,7 @@
 # Projeto_Analise_de_Algoritmos
 
 Repositório para a disciplina de Projeto e Análise de Algoritmos (2025/1 – Prof. Leonardo Rocha). Este programa lê uma série de tabuleiros de um jogo de “captura” (semelhante a damas), executa algorítmos de força‑bruta e de mínimo de movimentos, mede tempos de usuário e sistema, e grava os resultados em um arquivo de saída.
+Feito por Gabriel da Silva Souza e José Vitor Santos Alves
 
 ## Estrutura do Projeto
 
@@ -38,8 +39,8 @@ Repositório para a disciplina de Projeto e Análise de Algoritmos (2025/1 – P
 No diretório do projeto:
 
 ```bash
-make main      # compila todos os módulos gerando o executável `main`
-make run         # executa: ./main -i entrada.txt
+make main      # compila todos os módulos gerando o executável `tp1`
+make run         # executa: ./tp1 -i entrada.txt
 ```
 
 Para limpar artefatos:
@@ -76,8 +77,7 @@ Exemplo de `saida.txt`:
 Além disso, no console são exibidos:
 
 ```
-Tempo de usuário: XXX us
-Tempo de sistema: YYY us
+Tempo Total: X ms
 ```
 
 
