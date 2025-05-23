@@ -11,16 +11,16 @@ typedef struct Resultado {
     int tamanho;                // número de povos visitados
 } Resultado;
 
-// Resolve a instância usando uma heurística simples
+// Resolve a instância usando uma heurística gulosa
 Resultado* resolverComHeuristica(Povos *povos, Caminhos *caminhos, int D, int W);
 
-// Resolve a instância com programação dinâmica (placeholder, pode ser incrementado)
+// Resolve a instância com programação dinâmica 
 Resultado* resolverComPD(Povos *povos, Caminhos *caminhos, int D, int W);
 
 // Libera memória da estrutura Resultado
 void liberarResultado(Resultado *res);
 
-// Gera uma string formatada com a resposta final (para ser impressa ou salva)
+// Gera uma string formatada com a resposta 
 char* gerarSaida(Resultado *res);
 
 #endif
