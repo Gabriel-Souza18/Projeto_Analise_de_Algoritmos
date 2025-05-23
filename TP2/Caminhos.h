@@ -1,3 +1,5 @@
+#ifndef CAMINHOS_H
+#define CAMINHOS_H
 typedef struct Povo{
     int id;
     int peso;
@@ -31,3 +33,5 @@ Caminho * criarCaminhos(int origem, int destino, int distancia);
 void adicionarCaminho(Caminhos *caminhos, Caminho *caminho);
 void destruirCaminhos(Caminhos *caminhos);
 void printarCaminhos(Caminhos *caminhos);
+
+#endif
