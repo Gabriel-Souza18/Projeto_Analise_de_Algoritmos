@@ -14,21 +14,22 @@ Povo * criarPovo(int id, int peso, int habilidade){
     return povo;
 }
 
-Caminho * criarCaminhos(int origem, int destino, int distancia){
-    Caminho *caminho = (Caminho *)malloc(sizeof(Caminho));
-    if (!caminho){
-        perror("Erro ao alocar memória para o caminho");
+Caminho *criarCaminhos(int origem, int destino, int distancia) {
+    if (distancia <= 0) {
+        fprintf(stderr, "Distância inválida. A distância deve ser maior que zero.\n");
         return NULL;
     }
-    if(distancia < 0){
-        printf("Distância inválida. A distância deve ser maior ou igual a zero.\n");
-        free(caminho);
+    Caminho *caminho = malloc(sizeof(Caminho));
+    if (!caminho) {
+        perror("Erro ao alocar memória para o caminho");
+        return NULL;
     }
     caminho->origem = origem;
     caminho->destino = destino;
     caminho->distancia = distancia;
     return caminho;
 }
+
 void adicionarPovo(Povos *povos, Povo *povo){
     if (povos->numPovos == 0){
         povos->povos = (Povo *)malloc(sizeof(Povo));
