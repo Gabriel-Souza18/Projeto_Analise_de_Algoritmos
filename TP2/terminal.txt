@@ -1,0 +1,31 @@
+gabriel@gabrielAsus:~/Documentos/PAA/Projeto_Analise_de_Algoritmos/TP2$ make 
+gcc -c Solucao.c
+gcc -o main main.c IO.o Caminhos.o Solucao.o -lm
+./main
+Nova Instancia
+Resolvendo com Heuristica
+Tempo Heuristica: 0.000003
+Habilidade Total: 105
+Resolvendo com PD
+Tempo PD: 0.000025
+Habilidade Total: 106
+Resolvendo com Caminho e Distancia D
+Tempo com Distancia: 0.000775
+Habilidade Total: 106
+Fim da Instancia
+
+_____________________________
+
+Nova Instancia
+Resolvendo com Heuristica
+Tempo Heuristica: 0.000003
+Habilidade Total: 630
+Resolvendo com PD
+Tempo PD: 0.000024
+Habilidade Total: 634
+Resolvendo com Caminho e Distancia D
+Tempo com Distancia: 0.000558
+Habilidade Total: 634
+Fim da Instancia
+
+_____________________________
