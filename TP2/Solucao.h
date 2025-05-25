@@ -11,11 +11,23 @@ typedef struct Resultado {
     int tamanho;                // número de povos visitados
 } Resultado;
 
+typedef struct Vizinho {
+    int id;           
+    int distancia;     
+    struct Vizinho *prox;
+} Vizinho;
+typedef struct Grafo {
+    int numPovos;  
+    Vizinho **adj;      
+} Grafo;
 // Resolve a instância usando uma heurística gulosa
 Resultado* resolverComHeuristica(Povos *povos, Caminhos *caminhos, int D, int W);
 
 // Resolve a instância com programação dinâmica 
 Resultado* resolverComPD(Povos *povos, Caminhos *caminhos, int D, int W);
+
+//Resolve levando a distancia em consideração
+Resultado* resolverComDistancia(Povos *povos, Caminhos *caminhos, int D, int W);
 
 // Libera memória da estrutura Resultado
 void liberarResultado(Resultado *res);
