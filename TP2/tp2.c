@@ -6,8 +6,14 @@
 #include <stdlib.h>
 #include <time.h>
 
-int main(){
-    char *entrada = "entrada.txt";
+int main(int argc, char *argv[]) {
+    if (argc < 2) {
+        printf("Uso: %s <arquivo_de_entrada>\n", argv[0]);
+        return 1;
+    }
+    // Lê o arquivo de entrada
+
+    char *entrada = argv[1];
     char *conteudo = lerEntrada(entrada, 1024);
     char *ptr = conteudo;
 
@@ -58,8 +64,9 @@ int main(){
         clock_t t0 = clock();
         Resultado *resultadoH = resolverComHeuristica(&povos, &caminhos, distanciaMaxima, pesoMaximo);
         clock_t t1 = clock();
-        double tempoH = (double)(t1 - t0) / CLOCKS_PER_SEC;
-        printf("Tempo Heuristica: %f\n", tempoH);
+        double tempoH = (double)(t1 - t0) / CLOCKS_PER_SEC;// tempo em segundos
+
+        printf("Tempo Heuristica: %fms \n", tempoH*1e3);
         printf("Habilidade Total: %d\n", resultadoH->habilidadeTotal);
 
         char nomeArquivoH[50];
@@ -68,11 +75,11 @@ int main(){
 
         //programação dinâmica
         clock_t t2 = clock();
-        Resultado *resultadoPD = resolverComDistancia(&povos, &caminhos, distanciaMaxima, pesoMaximo);
+        Resultado *resultadoPD = resolverComPD(&povos, &caminhos, distanciaMaxima, pesoMaximo);
         clock_t t3 = clock();
         double tempoPD = (double)(t3 - t2) / CLOCKS_PER_SEC;
 
-        printf("Tempo PD+Distancia: %f\n", tempoPD);
+        printf("Tempo PD %f ms\n", tempoPD* 1e3);
         printf("Habilidade Total: %d\n", resultadoPD->habilidadeTotal);
 
         char nomeArquivoPD[50];

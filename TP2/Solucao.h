@@ -10,7 +10,24 @@ typedef struct Resultado {
     int *quantidadeRecrutada;   // quantidade de soldados recrutados em cada povo
     int tamanho;                // número de povos visitados
 } Resultado;
+typedef struct {
+    int povo;
+    int distanciaa_restante;
+    int peso_usado;
+    int habilidade;
+    int *caminho; 
+    int *quantidades;
+    int tamanho_caminho; 
+} Estado;  
+typedef struct NoFila {
+    Estado estado;
+    struct NoFila *prox;
+} NoFila;
 
+typedef struct FilaPrioridade {
+    NoFila *cabeca;
+    int (*comparador)(const Estado*, const Estado*);
+} FilaPrioridade;
 typedef struct Vizinho {
     int id;           
     int distancia;     
@@ -39,4 +56,12 @@ void liberarResultado(Resultado *res);
 // Gera uma string formatada com a resposta 
 char* gerarSaida(Resultado *res);
 
+Povos filtrarPorDistancia(Povos *original, Grafo *grafo, int D);
+
+FilaPrioridade* criar_fila(int (*comparador)(const Estado*, const Estado*));
+void liberar_fila(FilaPrioridade *fila);
+void enfileirar(FilaPrioridade *fila, Estado estado);
+Estado desenfileirar(FilaPrioridade *fila);
+int fila_vazia(FilaPrioridade *fila);
+int comparador_habilidade(const Estado *a, const Estado *b);
 #endif

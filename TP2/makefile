@@ -1,10 +1,10 @@
 objetos = IO.o Caminhos.o Solucao.o
 
-run: main
-	./main
+run: tp2
+	./tp2 entrada.txt
 
-main: main.c $(objetos)
-	gcc -o main main.c $(objetos) -lm
+tp2: tp2.c $(objetos)
+	gcc -o tp2 tp2.c $(objetos) -lm
 
 
 IO.o: IO.c IO.h
@@ -16,7 +16,7 @@ Caminhos.o: Caminhos.c Caminhos.h
 Solucao.o: Solucao.c Solucao.h Caminhos.h
 	gcc -c Solucao.c
 clean:
-	rm -f main $(objetos)
+	rm -f tp2 $(objetos)
 	rm -f *.o
 	# remove os txt menos a entrada
 	find . -maxdepth 1 -type f -name '*.txt' ! -name 'entrada.txt' -delete
