@@ -2,8 +2,8 @@
 Feito por Gabriel da Silva Souza e José Vitor Santos Alves
 # Como rodar
     # Compilar
-        make main 
-    # Rodar .main
+        make tp2 
+    # Rodar .tp2 com entrada.txt
         make run 
     # limpar .o, executaveis, e os txt menos a entrada
         make clean

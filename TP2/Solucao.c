@@ -127,7 +127,6 @@ Resultado* resolverComHeuristica(Povos *povos, Caminhos *caminhos,int D, int W){
     destruirPovos(&filtrados);
     return melhorRes;
 }
-
 Resultado *resolverComPD(Povos* povos, Caminhos *caminhos, int D, int pesoMax) {
     Grafo *grafo = criarGrafo(caminhos, povos->numPovos);
     Resultado *melhor = criarResultado(povos->numPovos);
@@ -141,14 +140,21 @@ Resultado *resolverComPD(Povos* povos, Caminhos *caminhos, int D, int pesoMax) {
             .peso_usado = 0,
             .habilidade = 0,
             .tamanho_caminho = 1,
-            .caminho = (int *)malloc((povos->numPovos + 1) * sizeof(int)),
-            .quantidades = (int *)calloc(povos->numPovos + 1, sizeof(int))
+            .caminho = (int *)malloc((povos->numPovos * povos->numPovos-1)* sizeof(int)),
+            .quantidades = (int *)malloc(grafo->numPovos * sizeof(int))
         };
         estado_inicial.caminho[0] = povo_id;
-
+      
+        // Zerar vetor de quantidades manualmente
+        for (int j = 0; j < grafo->numPovos; j++) {
+            estado_inicial.quantidades[j] = 0;
+        }
+        
         int max_recrutar = pesoMax / povos->povos[i].peso;
         if (max_recrutar > 0) {
-            estado_inicial.quantidades[0] = max_recrutar;
+
+            estado_inicial.quantidades[povo_id - 1] = max_recrutar;
+           
             estado_inicial.habilidade = max_recrutar * povos->povos[i].habilidade;
             estado_inicial.peso_usado = max_recrutar * povos->povos[i].peso;
         }
@@ -159,11 +165,14 @@ Resultado *resolverComPD(Povos* povos, Caminhos *caminhos, int D, int pesoMax) {
     while (!fila_vazia(fila)) {
         Estado estado_atual = desenfileirar(fila);
 
-        if (estado_atual.habilidade > melhor->habilidadeTotal) {
+       if (estado_atual.habilidade > melhor->habilidadeTotal) {
             melhor->habilidadeTotal = estado_atual.habilidade;
             melhor->tamanho = estado_atual.tamanho_caminho;
-            memcpy(melhor->visitados, estado_atual.caminho, estado_atual.tamanho_caminho * sizeof(int));
-            memcpy(melhor->quantidadeRecrutada, estado_atual.quantidades, estado_atual.tamanho_caminho * sizeof(int));
+            for (int i = 0; i < estado_atual.tamanho_caminho; i++) {
+                int id = estado_atual.caminho[i];
+                melhor->visitados[i] = id;
+                melhor->quantidadeRecrutada[i] = estado_atual.quantidades[id - 1];
+            }
         }
 
         for (Vizinho *viz = grafo->adj[estado_atual.povo]; viz != NULL; viz = viz->prox) {
@@ -176,11 +185,11 @@ Resultado *resolverComPD(Povos* povos, Caminhos *caminhos, int D, int pesoMax) {
                 .habilidade = estado_atual.habilidade,
                 .tamanho_caminho = estado_atual.tamanho_caminho,
                 .caminho = (int *)malloc((povos->numPovos + 1) * sizeof(int)),
-                .quantidades = (int *)calloc(povos->numPovos + 1, sizeof(int))
+                .quantidades = (int *)malloc(grafo->numPovos * sizeof(int))
             };
 
             memcpy(novo_estado.caminho, estado_atual.caminho, estado_atual.tamanho_caminho * sizeof(int));
-            memcpy(novo_estado.quantidades, estado_atual.quantidades, estado_atual.tamanho_caminho * sizeof(int));
+            memcpy(novo_estado.quantidades, estado_atual.quantidades, grafo->numPovos * sizeof(int));
 
             Povo *povo_atual = NULL;
             for (int i = 0; i < povos->numPovos; i++) {
@@ -194,31 +203,27 @@ Resultado *resolverComPD(Povos* povos, Caminhos *caminhos, int D, int pesoMax) {
             if (povo_atual) {
                 recrutados = (pesoMax - novo_estado.peso_usado) / povo_atual->peso;
                 if (recrutados > 0) {
+                    novo_estado.quantidades[viz->id - 1] = recrutados;
                     novo_estado.habilidade += recrutados * povo_atual->habilidade;
                     novo_estado.peso_usado += recrutados * povo_atual->peso;
                 }
             }
 
             novo_estado.caminho[estado_atual.tamanho_caminho] = viz->id;
-            novo_estado.quantidades[estado_atual.tamanho_caminho] = recrutados;
             novo_estado.tamanho_caminho = estado_atual.tamanho_caminho + 1;
 
             if (novo_estado.peso_usado <= pesoMax) {
                 enfileirar(fila, novo_estado);
-            } else {
-                free(novo_estado.caminho);
-                free(novo_estado.quantidades);
-            }
+            } 
         }
-
-        free(estado_atual.caminho);
-        free(estado_atual.quantidades);
     }
-
+    printf("Resolução concluída.\n");
     liberar_fila(fila);
     liberarGrafo(grafo);
     return melhor;
 }
+
+
 Grafo* criarGrafo(Caminhos *caminhos, int numPovos) {
     Grafo *grafo = (Grafo *)malloc(sizeof(Grafo));
     grafo->numPovos = numPovos + 1;

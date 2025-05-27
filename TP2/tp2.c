@@ -82,6 +82,7 @@ int main(int argc, char *argv[]) {
         printf("Tempo PD %f ms\n", tempoPD* 1e3);
         printf("Habilidade Total: %d\n", resultadoPD->habilidadeTotal);
 
+      
         char nomeArquivoPD[50];
         sprintf(nomeArquivoPD, "SaidaPD%s.txt", instanciaStr);
         escreverSaida(nomeArquivoPD, gerarSaida(resultadoPD));
@@ -89,6 +90,7 @@ int main(int argc, char *argv[]) {
         //liberação de memória
         liberarResultado(resultadoH);
         liberarResultado(resultadoPD);
+       
         destruirCaminhos(&caminhos);
         destruirPovos(&povos);
 
