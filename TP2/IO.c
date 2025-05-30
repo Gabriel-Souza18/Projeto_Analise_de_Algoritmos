@@ -3,9 +3,9 @@
 #include <stdlib.h>
 #include <string.h>
 
-char *lerEntrada(char *entrada) {
+char *lerEntrada(char *entrada) { // Removido 'tamanhoBuffer'
     FILE *arquivo = fopen(entrada, "r");
-    if(!arquivo){
+    if (!arquivo) {
         perror("Erro ao abrir o arquivo de entrada");
         return NULL;
     }
@@ -14,18 +14,18 @@ char *lerEntrada(char *entrada) {
     size_t tamanhoTotal = 0;
     char buffer[MAX_IO_BUFFER_SIZE]; // buffer para leitura
 
-    while(fgets(buffer, sizeof(buffer), arquivo) != NULL){
-        if (strcmp(buffer, "0 0\n") == 0){
+    while (fgets(buffer, sizeof(buffer), arquivo) != NULL) {
+        if (strcmp(buffer, "0 0\n") == 0) {
             break;
         }
-        if (buffer[0] == '\n' || buffer[0] == '\0'){
+        if (buffer[0] == '\n' || buffer[0] == '\0' || (buffer[0] == '\r' && buffer[1] == '\n')) { // Considerar \r\n
             continue;
         }
 
         size_t len = strlen(buffer);
         // realoca a memória pra nova linha
         char *temp = realloc(conteudo, tamanhoTotal + len + 1); 
-        if (!temp){
+        if (!temp) {
             free(conteudo);
             fclose(arquivo);
             perror("Erro ao realocar memória");
@@ -41,14 +41,13 @@ char *lerEntrada(char *entrada) {
 }
 
 void escreverSaida(char *saida, char *conteudo) {
-    // verifica se o conteúdo é nulo 
     if (!conteudo) {
         fprintf(stderr, "Conteúdo de saída nulo para o arquivo: %s\n", saida);
         return;
     }
 
     FILE *arquivo = fopen(saida, "w"); 
-    if (!arquivo){
+    if (!arquivo) {
         perror("Erro ao abrir o arquivo de saída");
         return;
     }

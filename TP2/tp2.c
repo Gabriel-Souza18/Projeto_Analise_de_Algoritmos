@@ -5,17 +5,19 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
+#include <string.h> // Para sscanf e snprintf
 
 int main(int argc, char *argv[]) {
     if (argc < 2) {
         printf("Uso: %s <arquivo_de_entrada>\n", argv[0]);
         return 1;
     }
-    // Lê o arquivo de entrada
-
-    char *entrada = argv[1];
-    char *conteudo = lerEntrada(entrada, 1024);
-    char *ptr = conteudo;
+    
+    char *entrada_filename = argv[1];
+    // CORRIGIDO: Chamada de lerEntrada sem o segundo argumento '1024'
+    char *conteudo_arquivo = lerEntrada(entrada_filename);
+    
+    char *ptr = conteudo_arquivo;
 
     int instancias = 0;
     int numPovos = 0;
@@ -24,80 +26,104 @@ int main(int argc, char *argv[]) {
     int numCaminhos = 0;
     int lidos = 0;
 
-    if (conteudo == NULL){
+    if (conteudo_arquivo == NULL) {
         printf("Erro ao ler o arquivo de entrada\n");
         return 1;
     }
 
+    // Lê o número de instâncias
     sscanf(ptr, "%d%n", &instancias, &lidos);
     ptr += lidos;
 
-    for (int i = 0; i < instancias; i++){
-        printf("Nova Instancia\n");
+    for (int i = 0; i < instancias; i++) {
+        printf("--- Nova Instancia %d ---\n", i + 1);
 
         char instanciaStr[20];
-        sprintf(instanciaStr, "%d", i+1);
+        sprintf(instanciaStr, "%d", i + 1);
 
-        Povos povos = { .povos = NULL, .numPovos = 0 };
-        Caminhos caminhos = { .caminhos = NULL, .numCaminhos = 0 };
+        // Inicializa as structs de Povos e Caminhos para cada instância
+        // É crucial inicializar 'capacidade' como 0 para o 'adicionarPovo/Caminho' funcionar corretamente na primeira alocação.
+        Povos povos = { .povos = NULL, .numPovos = 0, .capacidade = 0 }; 
+        Caminhos caminhos = { .caminhos = NULL, .numCaminhos = 0, .capacidade = 0 }; 
 
+        // Lê os parâmetros da instância
         sscanf(ptr, "%d %d %d %d%n", &numPovos, &distanciaMaxima, &pesoMaximo, &numCaminhos, &lidos);
         ptr += lidos;
 
-        for (int j = 0; j < numPovos; j++){
+        // Lê e adiciona os povos
+        for (int j = 0; j < numPovos; j++) {
             int id, peso, habilidade;
             sscanf(ptr, "%d %d %d%n", &id, &peso, &habilidade, &lidos);
             ptr += lidos;
             Povo *povo = criarPovo(id, peso, habilidade);
-            adicionarPovo(&povos, povo);
+            if (povo) { // Verifica se a criação do povo foi bem-sucedida
+                adicionarPovo(&povos, povo);
+                free(povo); // CORRIGIDO: Libera a memória do povo individual após o conteúdo ser copiado
+            }
         }
 
-        for (int j = 0; j < numCaminhos; j++){
+        // Lê e adiciona os caminhos
+        for (int j = 0; j < numCaminhos; j++) {
             int origem, destino, distancia;
             sscanf(ptr, "%d %d %d%n", &origem, &destino, &distancia, &lidos);
             ptr += lidos;
-            Caminho *caminho = criarCaminhos(origem, destino, distancia);
-            adicionarCaminho(&caminhos, caminho);
+            // CORRIGIDO: Função criarCaminho (singular)
+            Caminho *caminho = criarCaminho(origem, destino, distancia);
+            if (caminho) { // Verifica se a criação do caminho foi bem-sucedida
+                adicionarCaminho(&caminhos, caminho);
+                free(caminho); // CORRIGIDO: Libera a memória do caminho individual após o conteúdo ser copiado
+            }
         }
 
-        //heurística
+        // --- Execução da Heurística ---
         clock_t t0 = clock();
         Resultado *resultadoH = resolverComHeuristica(&povos, &caminhos, distanciaMaxima, pesoMaximo);
         clock_t t1 = clock();
-        double tempoH = (double)(t1 - t0) / CLOCKS_PER_SEC;// tempo em segundos
+        double tempoH = (double)(t1 - t0) / CLOCKS_PER_SEC; // Tempo em segundos
 
-        printf("Tempo Heuristica: %fms \n", tempoH*1e3);
-        printf("Habilidade Total: %d\n", resultadoH->habilidadeTotal);
-
-        char nomeArquivoH[50];
+        printf("Tempo Heurística: %f ms \n", tempoH * 1e3);
+        if (resultadoH) {
+            printf("Habilidade Total (Heurística): %d\n", resultadoH->habilidadeTotal);
+        } else {
+            printf("Erro: resultadoH nulo para Heurística.\n");
+        }
+        
+        char nomeArquivoH[MAX_FILENAME_LENGTH]; 
         sprintf(nomeArquivoH, "SaidaHeuristica%s.txt", instanciaStr);
-        escreverSaida(nomeArquivoH, gerarSaida(resultadoH));
+        char *saida_H = gerarSaida(resultadoH);
+        escreverSaida(nomeArquivoH, saida_H);
+        free(saida_H); // Libera a string de saída gerada por gerarSaida
 
-        //programação dinâmica
+        // --- Execução da Programação Dinâmica ---
         clock_t t2 = clock();
         Resultado *resultadoPD = resolverComPD(&povos, &caminhos, distanciaMaxima, pesoMaximo);
         clock_t t3 = clock();
         double tempoPD = (double)(t3 - t2) / CLOCKS_PER_SEC;
 
-        printf("Tempo PD %f ms\n", tempoPD* 1e3);
-        printf("Habilidade Total: %d\n", resultadoPD->habilidadeTotal);
-
-      
-        char nomeArquivoPD[50];
+        printf("Tempo PD: %f ms\n", tempoPD * 1e3);
+        if (resultadoPD) {
+            printf("Habilidade Total (PD): %d\n", resultadoPD->habilidadeTotal);
+        } else {
+            printf("Erro: resultadoPD nulo para PD.\n");
+        }
+        
+        char nomeArquivoPD[MAX_FILENAME_LENGTH]; 
         sprintf(nomeArquivoPD, "SaidaPD%s.txt", instanciaStr);
-        escreverSaida(nomeArquivoPD, gerarSaida(resultadoPD));
+        char *saida_PD = gerarSaida(resultadoPD);
+        escreverSaida(nomeArquivoPD, saida_PD);
+        free(saida_PD); // Libera a string de saída gerada por gerarSaida
 
-        //liberação de memória
-        liberarResultado(resultadoH);
+        // --- Liberação de Memória para a Instância Atual ---
+        liberarResultado(resultadoH); // Libera a struct Resultado e seus arrays internos
         liberarResultado(resultadoPD);
-       
-        destruirCaminhos(&caminhos);
-        destruirPovos(&povos);
+        
+        destruirCaminhos(&caminhos); // Libera o array de Caminhos
+        destruirPovos(&povos); // Libera o array de Povos
 
-        printf("Fim da Instancia\n");
+        printf("--- Fim da Instância %d ---\n", i + 1);
         printf("\n______________________\n\n");
     }
 
-    free(conteudo);
+    free(conteudo_arquivo); // Libera o buffer de conteúdo lido do arquivo
     return 0;
 }
