@@ -3,26 +3,28 @@
 #include <stdlib.h>
 #include <string.h>
 
-
-char *lerEntrada(char *entrada, int tamanho) {
+char *lerEntrada(char *entrada) {
     FILE *arquivo = fopen(entrada, "r");
     if(!arquivo){
         perror("Erro ao abrir o arquivo de entrada");
         return NULL;
     }
+
     char *conteudo = NULL;
     size_t tamanhoTotal = 0;
-    char buffer[4096];
+    char buffer[MAX_IO_BUFFER_SIZE]; // buffer para leitura
+
     while(fgets(buffer, sizeof(buffer), arquivo) != NULL){
         if (strcmp(buffer, "0 0\n") == 0){
             break;
         }
-        // pula linhas vazias
         if (buffer[0] == '\n' || buffer[0] == '\0'){
             continue;
         }
+
         size_t len = strlen(buffer);
-        char *temp = realloc(conteudo, tamanhoTotal + len + 1);
+        // realoca a memória pra nova linha
+        char *temp = realloc(conteudo, tamanhoTotal + len + 1); 
         if (!temp){
             free(conteudo);
             fclose(arquivo);
@@ -33,12 +35,19 @@ char *lerEntrada(char *entrada, int tamanho) {
         strcpy(conteudo + tamanhoTotal, buffer);
         tamanhoTotal += len;
     }
+
     fclose(arquivo);
     return conteudo;
 }
 
 void escreverSaida(char *saida, char *conteudo) {
-    FILE *arquivo = fopen(saida, "w");
+    // verifica se o conteúdo é nulo 
+    if (!conteudo) {
+        fprintf(stderr, "Conteúdo de saída nulo para o arquivo: %s\n", saida);
+        return;
+    }
+
+    FILE *arquivo = fopen(saida, "w"); 
     if (!arquivo){
         perror("Erro ao abrir o arquivo de saída");
         return;

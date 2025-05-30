@@ -32,20 +32,48 @@ Caminho *criarCaminhos(int origem, int destino, int distancia) {
 
 void adicionarPovo(Povos *povos, Povo *povo){
     if (povos->numPovos == 0){
-        povos->povos = (Povo *)malloc(sizeof(Povo));
-    } else {
-        povos->povos = (Povo *)realloc(povos->povos, (povos->numPovos + 1) * sizeof(Povo));
+        povos->capacidade = 1;
+        povos->povos = (Povo *)malloc(povos->capacidade * sizeof(Povo));
+        if (!povos->povos) {
+            perror("Erro ao alocar memória inicial para o povo");
+            return;
+        }
+    } // dobra a capacidade se o array estiver cheio
+    else if (povos->numPovos == povos->capacidade) {
+        int novaCapacidade = povos->capacidade * 2;
+        Povo *temp = (Povo *)realloc(povos->povos, novaCapacidade * sizeof(Povo));
+        if (!temp) {
+            perror("Erro ao realocar memória para o povo");
+            return;
+        }
+        povos->povos = temp;
+        povos->capacidade = novaCapacidade;
     }
+    // adiciona o novo povoe incrementa o contador
     povos->povos[povos->numPovos] = *povo;
     povos->numPovos++;
 }
 
 void adicionarCaminho(Caminhos *caminhos, Caminho *caminho){
     if (caminhos->numCaminhos == 0){
-        caminhos->caminhos = (Caminho *)malloc(sizeof(Caminho));
-    } else {
-        caminhos->caminhos = (Caminho *)realloc(caminhos->caminhos, (caminhos->numCaminhos + 1) * sizeof(Caminho));
+        caminhos->capacidade = 1; 
+        caminhos->caminhos = (Caminho *)malloc(caminhos->capacidade * sizeof(Caminho));
+        if (!caminhos->caminhos) {
+            perror("Erro ao alocar memória inicial para o caminho");
+            return;
+        }
+    } // dobra a capacidade
+    else if (caminhos->numCaminhos == caminhos->capacidade) {
+        int novaCapacidade = caminhos->capacidade * 2;
+        Caminho *temp = (Caminho *)realloc(caminhos->caminhos, novaCapacidade * sizeof(Caminho));
+        if (!temp) {
+            perror("Erro ao realocar memória para o caminho");
+            return;
+        }
+        caminhos->caminhos = temp;
+        caminhos->capacidade = novaCapacidade;
     }
+    // adiciona o novo caminho e incrementa o contador
     caminhos->caminhos[caminhos->numCaminhos] = *caminho;
     caminhos->numCaminhos++;
 }
@@ -55,24 +83,31 @@ void destruirPovos(Povos *povos){
         free(povos->povos);
         povos->povos = NULL;
         povos->numPovos = 0;
+        povos->capacidade = 0;
     }
 }
+
 void destruirCaminhos(Caminhos *caminhos){
     if (caminhos != NULL){
         free(caminhos->caminhos);
         caminhos->caminhos = NULL;
         caminhos->numCaminhos = 0;
-    }
-}
-void printarPovos(Povos *povos){
-    for (int i = 0; i < povos->numPovos; i++){
-        printf("Povo %d: Peso %d, Habilidade %d\n", povos->povos[i].id, povos->povos[i].peso, povos->povos[i].habilidade);
+        caminhos->capacidade = 0;
     }
 }
 
+void printarPovos(Povos *povos){
+    printf("--- Povos ---\n");
+    for (int i = 0; i < povos->numPovos; i++){
+        printf("Povo %d: Peso %d, Habilidade %d\n", povos->povos[i].id, povos->povos[i].peso, povos->povos[i].habilidade);
+    }
+    printf("---------------\n");
+}
+
 void printarCaminhos(Caminhos *caminhos){
+    printf("--- Caminhos ---\n");
     for (int i = 0; i < caminhos->numCaminhos; i++){
         printf("Caminho de %d para %d: Distância %d\n", caminhos->caminhos[i].origem, caminhos->caminhos[i].destino, caminhos->caminhos[i].distancia);
     }
-    
+    printf("---------------\n");
 }

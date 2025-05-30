@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
-#include <limits.h> //pra usaar o INT_MAX
+#include <limits.h> 
 
 Resultado* criarResultado(int tamanho) {
     Resultado *res = (Resultado *)malloc(sizeof(Resultado));
@@ -136,7 +136,7 @@ Resultado *resolverComPD(Povos* povos, Caminhos *caminhos, int D, int pesoMax) {
         int povo_id = povos->povos[i].id;
         Estado estado_inicial = {
             .povo = povo_id,
-            .distanciaa_restante = D,
+            .distancia_restante = D,
             .peso_usado = 0,
             .habilidade = 0,
             .tamanho_caminho = 1,
@@ -176,11 +176,11 @@ Resultado *resolverComPD(Povos* povos, Caminhos *caminhos, int D, int pesoMax) {
         }
 
         for (Vizinho *viz = grafo->adj[estado_atual.povo]; viz != NULL; viz = viz->prox) {
-            if (viz->distancia > estado_atual.distanciaa_restante) continue;
+            if (viz->distancia > estado_atual.distancia_restante) continue;
 
             Estado novo_estado = {
                 .povo = viz->id,
-                .distanciaa_restante = estado_atual.distanciaa_restante - viz->distancia,
+                .distancia_restante = estado_atual.distancia_restante - viz->distancia,
                 .peso_usado = estado_atual.peso_usado,
                 .habilidade = estado_atual.habilidade,
                 .tamanho_caminho = estado_atual.tamanho_caminho,
