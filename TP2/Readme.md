@@ -14,5 +14,5 @@ Feito por Gabriel da Silva Souza e José Vitor Santos Alves
 **cº linhas**- origem , destino distancia <br>
 
 # Saida
-Cada Intancia é salva em diferentes arquivos, com o nome do arquivo indicando qual metodo foi usado, e qual o numero da instancia, dentro do arquivo tem o seguinte formato:<br>
+Cada Instancia é salva em diferentes arquivos, com o nome do arquivo indicando qual metodo foi usado, e qual o numero da instancia, dentro do arquivo tem o seguinte formato:<br>
 O primeiro valor é a habilidade total, seguido pelo numero do povo visitado, e o numero de habitantes recrutados.
