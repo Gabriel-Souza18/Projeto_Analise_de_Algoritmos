@@ -14,7 +14,6 @@ int main(int argc, char *argv[]) {
     }
     
     char *entrada_filename = argv[1];
-    // CORRIGIDO: Chamada de lerEntrada sem o segundo argumento '1024'
     char *conteudo_arquivo = lerEntrada(entrada_filename);
     
     char *ptr = conteudo_arquivo;
@@ -58,7 +57,7 @@ int main(int argc, char *argv[]) {
             Povo *povo = criarPovo(id, peso, habilidade);
             if (povo) { // Verifica se a criação do povo foi bem-sucedida
                 adicionarPovo(&povos, povo);
-                free(povo); // CORRIGIDO: Libera a memória do povo individual após o conteúdo ser copiado
+                free(povo); 
             }
         }
 
@@ -67,11 +66,10 @@ int main(int argc, char *argv[]) {
             int origem, destino, distancia;
             sscanf(ptr, "%d %d %d%n", &origem, &destino, &distancia, &lidos);
             ptr += lidos;
-            // CORRIGIDO: Função criarCaminho (singular)
             Caminho *caminho = criarCaminho(origem, destino, distancia);
             if (caminho) { // Verifica se a criação do caminho foi bem-sucedida
                 adicionarCaminho(&caminhos, caminho);
-                free(caminho); // CORRIGIDO: Libera a memória do caminho individual após o conteúdo ser copiado
+                free(caminho); 
             }
         }
 
