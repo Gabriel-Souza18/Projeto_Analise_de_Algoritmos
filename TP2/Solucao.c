@@ -408,8 +408,7 @@ Resultado *resolverComPD(Povos* povos, Caminhos *caminhos, int D, int pesoMax) {
             if (novo_estado.tamanho_caminho < (povos->numPovos + 1)) { 
                 novo_estado.caminho[novo_estado.tamanho_caminho++] = viz->id;
             } else {
-                fprintf(stderr, "Aviso: Caminho excedeu a capacidade alocada para o estado. ID: %d\n", viz->id);
-                // Pode ser necessário realocar 'caminho' ou parar a exploração se for crítico.
+               // Pode ser necessário realocar 'caminho' ou parar a exploração se for crítico.
             }
             
             // Se o novo estado for válido (peso <= pesoMax), enfileira
