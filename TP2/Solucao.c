@@ -365,12 +365,6 @@ Resultado *resolverComPD(Povos* povos, Caminhos *caminhos, int D, int pesoMax) {
                     break; 
                 }
             }
-
-            // Tenta recrutar no novo povo (vizinho) se ele não foi recrutado antes
-            // ou se for uma mochila ilimitada por povo.
-            // A lógica "pega ou não pega o povo" no sentido de já ter visitado.
-            // Para mochila ilimitada em cada povo (pode recrutar mais se tiver peso),
-            // a lógica abaixo é mais adequada.
             
             // Verifica se o povo já está no caminho (visita única)
             int povo_ja_visitado = 0;
@@ -407,10 +401,7 @@ Resultado *resolverComPD(Povos* povos, Caminhos *caminhos, int D, int pesoMax) {
             // Verifica se há espaço no array caminho antes de adicionar
             if (novo_estado.tamanho_caminho < (povos->numPovos + 1)) { 
                 novo_estado.caminho[novo_estado.tamanho_caminho++] = viz->id;
-            } else {
-               // Pode ser necessário realocar 'caminho' ou parar a exploração se for crítico.
-            }
-            
+            } 
             // Se o novo estado for válido (peso <= pesoMax), enfileira
             if (novo_estado.peso_usado <= pesoMax) {
                 enfileirar(fila, novo_estado);
@@ -436,7 +427,6 @@ Grafo* criarGrafo(Caminhos *caminhos, Povos *povos_list) {
     if (!grafo) { perror("Erro ao alocar memória para o grafo"); return NULL; }
 
     // Determinar o maior ID de povo para dimensionar o array de adjacência
-    // Assumindo que os IDs dos povos são 1-based, mas podem não ser sequenciais.
     int max_id = 0;
     for(int i = 0; i < caminhos->numCaminhos; i++) {
         if(caminhos->caminhos[i].origem > max_id) max_id = caminhos->caminhos[i].origem;

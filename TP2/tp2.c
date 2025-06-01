@@ -35,7 +35,7 @@ int main(int argc, char *argv[]) {
     ptr += lidos;
 
     for (int i = 0; i < instancias; i++) {
-        printf("--- Nova Instancia %d ---\n", i + 1);
+        printf("\n--- Nova Instancia %d ---\n", i + 1);
 
         char instanciaStr[20];
         sprintf(instanciaStr, "%d", i + 1);
@@ -119,7 +119,6 @@ int main(int argc, char *argv[]) {
         destruirPovos(&povos); // Libera o array de Povos
 
         printf("--- Fim da Instância %d ---\n", i + 1);
-        printf("\n______________________\n\n");
     }
 
     free(conteudo_arquivo); // Libera o buffer de conteúdo lido do arquivo
