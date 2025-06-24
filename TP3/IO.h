@@ -1,8 +1,19 @@
 #ifndef IO_H
 #define IO_H
 
-// Define um tamanho máximo para o buffer de leitura de arquivo.
+
 #define MAX_IO_BUFFER_SIZE 4096
+
+typedef struct {
+    double tempo;   
+    char *saida;           
+} ResultadoParte1;
+
+typedef struct {
+    double tempo;    
+    char *saida;       
+    int num_comparaçoes;           
+} ResultadoParte2;
 
 char* lerEntrada(char *entrada); 
 

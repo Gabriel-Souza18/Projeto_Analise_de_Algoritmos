@@ -46,6 +46,7 @@ void escreverSaida(char *saida, char *conteudo) {
         return;
     }
 
+    printf("Escrevendo no arquivo de saída: %s\n", saida);
     FILE *arquivo = fopen(saida, "w"); 
     if (!arquivo) {
         perror("Erro ao abrir o arquivo de saída");
