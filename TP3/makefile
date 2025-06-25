@@ -2,6 +2,7 @@ objetos1 = IO.o alg_parte1.o
 objetos2 = IO.o alg_parte2.o
 
 run: tp3_parte1
+	./tp3_parte1 1 Arquivo_texto.txt Arquivo_Padroes.txt
 	./tp3_parte1 2 Arquivo_texto.txt Arquivo_Padroes.txt
 	./tp3_parte2 Arquivo_texto.txt Arquivo_Padroes.txt
 
@@ -25,3 +26,4 @@ clean:
 	rm -f saida_*.txt
 	rm -f tp3_parte1
 	rm -f tp3_parte2
+	rm -f *.csv 
