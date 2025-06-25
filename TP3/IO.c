@@ -3,51 +3,45 @@
 #include <stdlib.h>
 #include <string.h>
 
-char *lerEntrada(char *entrada) { 
-    FILE *arquivo = fopen(entrada, "r");
+// Lê um arquivo inteiro para uma string alocada dinamicamente.
+char *lerArquivo(const char *nomeArquivo) {
+    FILE *arquivo = fopen(nomeArquivo, "rb");
     if (!arquivo) {
         perror("Erro ao abrir o arquivo de entrada");
         return NULL;
     }
 
-    char *conteudo = NULL;
-    size_t tamanhoTotal = 0;
-    char buffer[MAX_IO_BUFFER_SIZE];
+    fseek(arquivo, 0, SEEK_END);
+    long tamanho = ftell(arquivo);
+    fseek(arquivo, 0, SEEK_SET);
 
-    while (fgets(buffer, sizeof(buffer), arquivo) != NULL) {
-        if (strcmp(buffer, "0 0\n") == 0) {
-            break;
-        }
-        if (buffer[0] == '\n' || buffer[0] == '\0' || (buffer[0] == '\r' && buffer[1] == '\n')) { // Considerar \r\n
-            continue;
-        }
-
-        size_t len = strlen(buffer);
-    
-        char *temp = realloc(conteudo, tamanhoTotal + len + 1); 
-        if (!temp) {
-            free(conteudo);
-            fclose(arquivo);
-            perror("Erro ao realocar memória");
-            return NULL;
-        }
-        conteudo = temp;
-        strcpy(conteudo + tamanhoTotal, buffer);
-        tamanhoTotal += len;
+    char *conteudo = (char *)malloc(tamanho + 1);
+    if (!conteudo) {
+        perror("Erro ao alocar memória para o conteúdo do arquivo");
+        fclose(arquivo);
+        return NULL;
     }
 
+    if (fread(conteudo, 1, tamanho, arquivo) != (size_t)tamanho) {
+        fprintf(stderr, "Erro ao ler o arquivo.\n");
+        free(conteudo);
+        fclose(arquivo);
+        return NULL;
+    }
+    
+    conteudo[tamanho] = '\0';
     fclose(arquivo);
     return conteudo;
 }
 
-void escreverSaida(char *saida, char *conteudo) {
+// Escreve uma string em um arquivo.
+void escreverArquivo(const char *nomeArquivo, const char *conteudo) {
     if (!conteudo) {
-        fprintf(stderr, "Conteúdo de saída nulo para o arquivo: %s\n", saida);
+        fprintf(stderr, "Conteúdo de saída nulo para o arquivo: %s\n", nomeArquivo);
         return;
     }
 
-    printf("Escrevendo no arquivo de saída: %s\n", saida);
-    FILE *arquivo = fopen(saida, "w"); 
+    FILE *arquivo = fopen(nomeArquivo, "w");
     if (!arquivo) {
         perror("Erro ao abrir o arquivo de saída");
         return;

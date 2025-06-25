@@ -36,7 +36,7 @@ void destruirPovos(Povos *povos);
 void printarPovos(Povos *povos);
 
 // Declarações de funções para Caminho
-Caminho *criarCaminho(int origem, int destino, int distancia); // Renomeado para singular
+Caminho *criarCaminho(int origem, int destino, int distancia); 
 void adicionarCaminho(Caminhos *caminhos, Caminho *caminho);
 void destruirCaminhos(Caminhos *caminhos);
 void printarCaminhos(Caminhos *caminhos);
