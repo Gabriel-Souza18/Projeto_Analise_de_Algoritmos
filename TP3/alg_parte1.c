@@ -44,9 +44,9 @@ ResultadoParte1 ProgramacaoDinamica(char *texto, int tam_texto, char *padrao, in
                                          coluna_anterior[i - 1] + custo); // Substituição/Match
         }
 
-        if (coluna_atual[tam_padrao] <= k_erros) {
+        if (coluna_atual[tam_padrao] <= k_erros && j >= tam_padrao) {
             char temp[32];
-            sprintf(temp, " %d", j - tam_padrao); // Ocorrência termina em j, começa em j-m+1 (base 1)
+            sprintf(temp, " %d", j - tam_padrao + 2); // Ocorrência termina em j, começa em j-m+1 (base 1)
             strcat(string_ocorrencias, temp);
         }
 
