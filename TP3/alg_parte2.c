@@ -166,7 +166,7 @@ long long buscar_comprimido(const unsigned char *texto, size_t tam_texto, const 
             }
         }
         if (encontrou) {
-            return;
+        
         }
     }
     return comparacoes;
