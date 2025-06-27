@@ -15,6 +15,7 @@ int main(int argc, char *argv[]) {
     char *arquivoTexto = argv[1];
     char *arquivoPadroes = argv[2];
 
+    // Lê os arquivos de texto e padrões
     char *texto = lerArquivo(arquivoTexto);
     char *padroes_brutos = lerArquivo(arquivoPadroes);
     if (!texto || !padroes_brutos) {
@@ -27,6 +28,7 @@ int main(int argc, char *argv[]) {
     printf("Texto: %s (%d caracteres)\n", arquivoTexto, tam_texto);
     printf("Padrões: %s\n\n", arquivoPadroes);
 
+    // Compressão de Huffman do texto inteiro 
     unsigned char *texto_comprimido = NULL;
     size_t tamanho_texto_comprimido = 0;
     clock_t inicio_huffman = clock();
@@ -43,6 +45,7 @@ int main(int argc, char *argv[]) {
         printf(" - Compressão falhou ou texto vazio.\n\n");
     }
 
+    // Abre o arquivo de saída
     char nome_arq_saida[MAX_NOME_ARQUIVO];
     snprintf(nome_arq_saida, sizeof(nome_arq_saida), "saida_parte2_ocorrencias.txt");
     FILE* arq_ocorrencias = fopen(nome_arq_saida, "w");
@@ -61,18 +64,19 @@ int main(int argc, char *argv[]) {
             continue;
         }
 
+        // Busca com BMH no texto não comprimido
         ResultadoParte2 resultado = BoyerMooreHorspool(texto, tam_texto, padrao, tam_padrao);
         fprintf(arq_ocorrencias, "%s", resultado.saida_ocorrencias);
 
         unsigned char *padrao_comprimido = NULL;
         size_t tamanho_padrao_comprimido = 0;
-        
         ComprimirHuffman((unsigned char*)padrao, tam_padrao, &padrao_comprimido, &tamanho_padrao_comprimido);
         
+        // Busca direta por bytes no texto comprimido 
         clock_t inicio_busca_comprimida = clock();
         long long comparacoes_comprimido = 0;
-        if(texto_comprimido && padrao_comprimido) {
-             comparacoes_comprimido = buscar_comprimido(texto_comprimido, tamanho_texto_comprimido, padrao_comprimido, tamanho_padrao_comprimido);
+        if (texto_comprimido && padrao_comprimido) {
+            comparacoes_comprimido = buscar_comprimido(texto_comprimido, tamanho_texto_comprimido, padrao_comprimido, tamanho_padrao_comprimido);
         }
         double tempo_busca_comprimida = ((double)(clock() - inicio_busca_comprimida)) / CLOCKS_PER_SEC;
 
@@ -81,6 +85,7 @@ int main(int argc, char *argv[]) {
             resultado.tempo_nao_comprimido, resultado.comps_nao_comprimido,
             tempo_busca_comprimida, comparacoes_comprimido);
         
+        // Liberação de memória da iteração atual
         free(resultado.saida_ocorrencias);
         free(padrao_comprimido);
         
@@ -92,6 +97,7 @@ int main(int argc, char *argv[]) {
     fclose(arq_ocorrencias);
     printf("\nResultados de ocorrências salvos em: %s\n", nome_arq_saida);
 
+    // Liberação final
     free(copia_padroes);
     free(padroes_brutos);
     free(texto);

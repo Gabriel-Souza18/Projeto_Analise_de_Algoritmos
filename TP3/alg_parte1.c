@@ -47,7 +47,7 @@ ResultadoParte1 ProgramacaoDinamica(char *texto, int tam_texto, char *padrao, in
             coluna_atual[i] = minimoDeTres(
                 coluna_atual[i - 1] + 1,      // Inserção
                 coluna_anterior[i] + 1,        // Deleção
-                coluna_anterior[i - 1] + custo // Substituição/Match
+                coluna_anterior[i - 1] + custo // Substituição
             );
         }
 
@@ -55,7 +55,7 @@ ResultadoParte1 ProgramacaoDinamica(char *texto, int tam_texto, char *padrao, in
         if (coluna_atual[tam_padrao] <= k_erros && j >= tam_padrao) {
             char temp[32];
                 int posicao = j - tam_padrao + 1;
-                if (posicao > 0) {  // Filtra posições negativas
+                if (posicao > 0) {  
                     sprintf(temp, " %d", posicao);
                     strcat(string_ocorrencias, temp);
                 }
@@ -115,7 +115,7 @@ ResultadoParte1 ShiftAnd(char *texto, int tam_texto, char *padrao, int tam_padra
             if ((R & mascara_final) && (j >= tam_padrao - 1)) {
                 char temp[32];
                 int posicao = j - tam_padrao + 2;
-                if (posicao > 0) {  // Filtra posições negativas
+                if (posicao > 0) {  
                     sprintf(temp, " %d", posicao);
                     strcat(string_ocorrencias, temp);}
                 }
@@ -129,7 +129,6 @@ ResultadoParte1 ShiftAnd(char *texto, int tam_texto, char *padrao, int tam_padra
             exit(1);
         }
 
-        // Inicializa R com todos os bits 1
         for (int i = 0; i <= k_erros; i++) {
             R[i] = ~0UL;
         }
@@ -138,26 +137,22 @@ ResultadoParte1 ShiftAnd(char *texto, int tam_texto, char *padrao, int tam_padra
 
         for (int j = 0; j < tam_texto; j++) {
             resultado.num_comparacoes++;
-            unsigned long R_antigo = R[0]; // Salva o estado anterior de R[0]
+            unsigned long R_antigo = R[0]; 
 
-            // Atualiza R[0]
             R[0] = ((R[0] << 1) | 1) & B[(unsigned char)texto[j]];
             
-            // Atualiza os estados para erros
             for (int i = 1; i <= k_erros; i++) {
                 unsigned long temp = R[i];
-                // Combina operações: substituição, deleção e inserção
-                R[i] = ((R[i] << 1) | 1) & B[(unsigned char)texto[j]]; // Match/substituição
+                R[i] = ((R[i] << 1) | 1) & B[(unsigned char)texto[j]]; // Substituição
                 R[i] |= R_antigo; // Deleção
                 R[i] |= (R[i-1] << 1); // Inserção
                 R_antigo = temp; // Atualiza para próxima iteração
             }
 
-            // Verifica ocorrência
             if (R[k_erros] & mascara_final) {
                 char temp[32];
                 int posicao = j - tam_padrao + 2;
-                if (posicao > 0) {  // Filtra posições negativas
+                if (posicao > 0) {  
                     sprintf(temp, " %d", posicao);
                     strcat(string_ocorrencias, temp);
                 }
