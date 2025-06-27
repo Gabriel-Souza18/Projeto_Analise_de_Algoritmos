@@ -1,4 +1,5 @@
 #include "alg_parte2.h"
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -111,4 +112,70 @@ static void gerar_codigos_recursivo(NoHuffman* raiz, char *codigos[TAMANHO_ALFAB
         codigo[topo] = '\0';
         codigos[raiz->caractere] = strdup(codigo);
     }
+}
+void ComprimirHuffman(const unsigned char *dados, size_t tamanho, unsigned char **dados_comprimidos, size_t *tamanho_comprimido) {
+    unsigned long frequencias[TAMANHO_ALFABETO] = {0};
+    for(size_t i = 0; i < tamanho; i++) frequencias[dados[i]]++;
+
+    NoFilaPrioridade *fila_p = NULL;
+    for(int i = 0; i < TAMANHO_ALFABETO; i++) {
+        if (frequencias[i] > 0) {
+            fila_inserir(&fila_p, criar_no_huffman((unsigned char)i, frequencias[i]));
+        }
+    }
+    
+    if (fila_p == NULL) { *dados_comprimidos = NULL; *tamanho_comprimido = 0; return; }
+    
+    while(fila_p->proximo != NULL) {
+        NoHuffman *esquerda = fila_remover(&fila_p);
+        NoHuffman *direita = fila_remover(&fila_p);
+        NoHuffman *no_interno = criar_no_huffman('$', esquerda->frequencia + direita->frequencia);
+        no_interno->esquerda = esquerda;
+        no_interno->direita = direita;
+        fila_inserir(&fila_p, no_interno);
+    }
+    
+    NoHuffman *raiz = fila_remover(&fila_p);
+
+    char *codigos[TAMANHO_ALFABETO] = {0};
+    char codigo[256];
+    gerar_codigos_recursivo(raiz, codigos, codigo, 0);
+
+    size_t tamanho_saida_bits = 0;
+    for (size_t i = 0; i < tamanho; i++) tamanho_saida_bits += strlen(codigos[dados[i]]);
+    
+    *tamanho_comprimido = (tamanho_saida_bits + 7) / 8;
+    *dados_comprimidos = (unsigned char*)calloc(*tamanho_comprimido, sizeof(unsigned char));
+
+    size_t indice_byte = 0;
+    int indice_bit = 0;
+    for (size_t i = 0; i < tamanho; i++) {
+        char *c = codigos[dados[i]];
+        for (int j = 0; c[j] != '\0'; j++) {
+            if (c[j] == '1') (*dados_comprimidos)[indice_byte] |= (1 << (7 - indice_bit));
+            indice_bit++;
+            if (indice_bit == 8) { indice_bit = 0; indice_byte++; }
+        }
+    }
+}
+
+// Busca de bytes
+long long buscar_comprimido(const unsigned char *texto, size_t tam_texto, const unsigned char *padrao, size_t tam_padrao) {
+    long long comparacoes = 0;
+    if (tam_padrao == 0 || tam_padrao > tam_texto) return 0;
+
+    for(size_t i = 0; i <= tam_texto - tam_padrao; i++) {
+        int encontrou = 1;
+        for(size_t j = 0; j < tam_padrao; j++) {
+            comparacoes++;
+            if (texto[i+j] != padrao[j]) {
+                encontrou = 0;
+                break;
+            }
+        }
+        if (encontrou) {
+        
+        }
+    }
+    return comparacoes;
 }

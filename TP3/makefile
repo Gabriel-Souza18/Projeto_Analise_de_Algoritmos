@@ -10,7 +10,7 @@ tp4_parte1: tp4_parte1.c $(OBJ_IO) $(OBJ_P1)
 	gcc -o $@ tp4_parte1.c $(OBJ_IO) $(OBJ_P1) -lm
 
 tp4_parte2: tp4_parte2.c $(OBJ_IO) $(OBJ_P2)
-	gcc -o $@ tp4_parte2.c $(OBJ_IO) $(OBJ_P2) -lm
+	gcc -o $@ tp4_parte2.c $(OBJ_IO) alg_parte2.o -lm
 
 run: tp4_parte1 tp4_parte2
 	./tp4_parte1 1 Arquivo_texto.txt Arquivo_Padroes.txt
